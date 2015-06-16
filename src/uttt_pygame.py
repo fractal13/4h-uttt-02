@@ -18,7 +18,7 @@ class UTTTGame(PygameGame):
         self.player1 = pygame.image.load("pearl_dribbble.png")
         self.player2 = pygame.image.load("starfishicon.png")
         self.music = pygame.mixer.music.load("Wallpaper.mp3")
-        pygame.mixer.music.play(-1,0.0)
+        pygame.mixer.music.play(-1, 0.0)
         return
 
     def handle_state(self):
