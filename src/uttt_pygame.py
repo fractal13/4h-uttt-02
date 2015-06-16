@@ -15,6 +15,8 @@ class UTTTGame(PygameGame):
         self.send_queue = send_queue
         self.font = pygame.font.SysFont("San Serif",14)
         self.image = pygame.image.load("dude_surfin.png")
+        self.player1 = pygame.image.load("pearl_dribbble.png")
+        self.player2 = pygame.image.load("starfishicon.png")
         return
 
     def handle_state(self):
@@ -115,9 +117,9 @@ class UTTTGame(PygameGame):
                 y = int((row + .5) * self.height / 9)
                 marker = self.data.GetMarker(board, position)
                 if marker == uttt_data.PLAYER_X:
-                    pygame.image.load("pearl_dribbble.png")
+                    surface.blit(self.player1, (0,0))
                 elif marker == uttt_data.PLAYER_O:
-                    pygame.image.load("starfishicon.png")
+                    surface.blit(self.player2, (0,0))
         #Text
         pName = self.data.GetPlayerName()
         self.drawTextLeft(surface, pName, (0, 0, 255), 10, 30, self.font)
