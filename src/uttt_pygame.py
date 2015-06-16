@@ -115,9 +115,9 @@ class UTTTGame(PygameGame):
                     pygame.draw.circle(surface, (255,0,0), (x, y), 5)
         #Text
         pName = self.data.GetPlayerName()
-        self.drawTextLeft(surface, pName, (0, 0, 255), 260, 30, self.font)
+        self.drawTextLeft(surface, pName, (0, 0, 255), 10, 30, self.font)
         oName = self.data.GetOpponentName()
-        self.drawTextLeft(surface, oName, (255, 0, 0), 260, 50, self.font)
+        self.drawTextLeft(surface, oName, (255, 0, 0), 10, 50, self.font)
         cPlayer = self.data.GetNextPlayer()
         if self.data.GetState() == 8:
             if cPlayer == self.data.GetPlayer():
@@ -126,12 +126,12 @@ class UTTTGame(PygameGame):
                 cPlayer = ("Their turn")
         else:
             cPlayer = ("Waiting for opponent...")
-        self.drawTextLeft(surface, cPlayer, (255, 0, 0), 260, 90, self.font)
+        self.drawTextLeft(surface, cPlayer, (255, 0, 0), 10, 90, self.font)
         #Board
         if self.data.GetState() == 8:
             nBoard = self.data.GetNextBoard()
             nBoard = "Board #" + str(nBoard)
-            self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 260, 70, self.font)
+            self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 10, 70, self.font)
         return
     
     def drawTextLeft(self, surface, text, color, x, y, font):

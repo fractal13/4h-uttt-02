@@ -108,7 +108,11 @@ class TTTGUI:
         # Sign up Button
         self.signup_button = gtk.Button("Sign up")
         self.signup_button.show()
-        
+
+        # Notification Label
+        self.notification_label = gtk.Label("Your password must be longer than 6 characters")
+        self.notification_label.hide()
+
         # Sign up Interface
         self.signup_box = gtk.VBox(False, 0)
         self.signup_box.pack_start(self.su_username_box,  True, True)
@@ -116,7 +120,9 @@ class TTTGUI:
         self.signup_box.pack_start(self.su_password_box,  True, True)
         self.signup_box.pack_start(self.su_confirm_box,  True, True)
         self.signup_box.pack_start(self.signup_button,  True, True)
+        self.signup_box.pack_start(self.notification_label,  True, True)
         self.signup_box.show()
+
         
         return
         
@@ -255,6 +261,7 @@ class TTTGUI:
         self.su_password_view.connect('activate', self.signup_handler)
         self.su_confirm_view.connect('activate', self.signup_handler)
         self.signup_button.connect('clicked', self.signup_handler)
+        self.su_password_view.connect('changed', self.password_handler)
 
         self.login_fail_button.connect('clicked', self.login_fail_handler)
         self.signup_fail_button.connect('clicked', self.signup_fail_handler)
@@ -357,18 +364,25 @@ class TTTGUI:
         
     # This method is called by the 'signup' button
     def signup_handler(self, widget, data=None):
-        username = self.su_username_view.get_text()
-        email = self.su_email_view.get_text()
-        password = self.su_password_view.get_text()
-        confirm = self.su_confirm_view.get_text()
-        print "username=",username, "  email=",email, "  password=", password, "  confirm=", confirm
-        if self.data and self.send_queue:
-            text = self.data.SendSignUp(username, email, password, confirm)
-            print "gtk: queuing: %s" % (text, )
-            self.send_queue.put(text)
-            self.notebook.set_current_page(2)
+        if len(self.su_password_view.get_text()) >= 6:
+            self.notification_label.hide()
+            username = self.su_username_view.get_text()
+            email = self.su_email_view.get_text()
+            password = self.su_password_view.get_text()
+            confirm = self.su_confirm_view.get_text()
+            print "username=",username, "  email=",email, "  password=", password, "  confirm=", confirm
+            if self.data and self.send_queue:
+                text = self.data.SendSignUp(username, email, password, confirm)
+                print "gtk: queuing: %s" % (text, )
+                self.send_queue.put(text)
+                self.notebook.set_current_page(2)
+        else:
+            self.notification_label.show()
         return
-
+    # Password Strength Handler
+    def password_handler(self, widget, data=None):
+        print len(self.su_password_view.get_text())
+        
     # This method is called by the 'login fail' button
     def login_fail_handler(self, widget, data=None):
         if self.data:
@@ -379,7 +393,7 @@ class TTTGUI:
     # This method is called by the 'signup fail' button
     def signup_fail_handler(self, widget, data=None):
         if self.data:
-            self.data.ShowSignup()
+            self.data.ShowSignUp()
         self.notebook.set_current_page(1)
         return
 
