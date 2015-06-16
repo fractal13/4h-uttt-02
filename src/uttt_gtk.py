@@ -26,6 +26,11 @@ class TTTGUI:
         self.username_box.pack_start(self.username_label, True, False)
         self.username_box.pack_start(self.username_view, True, True)
         self.username_box.show()
+
+        username_style = self.username_label.get_style().copy()
+        username_style.fg[gtk.STATE_NORMAL] = self.username_label.get_colormap().alloc(65535, 32767, 0)
+        self.username_label.set_style(username_style)
+
         
         # Password
         self.password_label = gtk.Label("Password")
@@ -39,10 +44,19 @@ class TTTGUI:
         self.password_box.pack_start(self.password_label, True, False)
         self.password_box.pack_start(self.password_view, True, True)
         self.password_box.show()
+
+        password_style = self.password_label.get_style().copy()
+        password_style.fg[gtk.STATE_NORMAL] = self.password_label.get_colormap().alloc(65535, 32767, 0)
+        self.password_label.set_style(password_style)
         
         # Login Button
         self.login_button = gtk.Button("Login")
         self.login_button.show()
+
+        login_button_style = self.login_button.get_style().copy()
+        login_button_style.bg[gtk.STATE_NORMAL] = self.login_button.get_colormap().alloc(65535, 32767, 0)
+        login_button_style.bg[gtk.STATE_PRELIGHT] = self.login_button.get_colormap().alloc(0, 0, 65535)
+        self.login_button.set_style(login_button_style)
         
         # Login Interface
         self.login_box = gtk.VBox(False, 0)
@@ -113,6 +127,10 @@ class TTTGUI:
         self.notification_label = gtk.Label("Your password must be longer than 6 characters")
         self.notification_label.hide()
 
+        # Notification Label
+        self.notification_label_two = gtk.Label("Your passwords must match")
+        self.notification_label_two.hide()
+
         # Sign up Interface
         self.signup_box = gtk.VBox(False, 0)
         self.signup_box.pack_start(self.su_username_box,  True, True)
@@ -121,6 +139,7 @@ class TTTGUI:
         self.signup_box.pack_start(self.su_confirm_box,  True, True)
         self.signup_box.pack_start(self.signup_button,  True, True)
         self.signup_box.pack_start(self.notification_label,  True, True)
+        self.signup_box.pack_start(self.notification_label_two,  True, True)
         self.signup_box.show()
 
         
@@ -364,7 +383,8 @@ class TTTGUI:
         
     # This method is called by the 'signup' button
     def signup_handler(self, widget, data=None):
-        if len(self.su_password_view.get_text()) >= 6:
+        if len(self.su_password_view.get_text()) >= 6 and self.su_password_view.get_text() == self.su_confirm_view.get_text():
+            print("Worked")
             self.notification_label.hide()
             username = self.su_username_view.get_text()
             email = self.su_email_view.get_text()
@@ -376,8 +396,25 @@ class TTTGUI:
                 print "gtk: queuing: %s" % (text, )
                 self.send_queue.put(text)
                 self.notebook.set_current_page(2)
-        else:
+        elif len(self.su_password_view.get_text()) < 6:
+            print("Password too short")
+            if self.su_password_view.get_text() == self.su_confirm_view.get_text():
+                self.notification_label_two.hide()
+            else:
+                self.notification_label_two.show()
+                
             self.notification_label.show()
+
+        elif self.su_password_view.get_text() != self.su_confirm_view.get_text():
+            print("Passwords don't match")
+            if  len(self.su_password_view.get_text()) >= 6:
+                self.notification_label.hide()
+            else:
+                self.notification_label.show()
+                
+            self.notification_label_two.show()
+        else:
+            print("else")
         return
     # Password Strength Handler
     def password_handler(self, widget, data=None):
