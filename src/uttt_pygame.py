@@ -17,13 +17,10 @@ class UTTTGame(PygameGame):
         self.image = pygame.image.load("dude_surfin.png")
         self.player1 = pygame.image.load("pearl_dribbble.png")
         self.player2 = pygame.image.load("starfishicon.png")
-<<<<<<< HEAD
-=======
         pygame.mixer.init()
         self.music = pygame.mixer.music.load("Wallpaper.mp3")
 
         pygame.mixer.music.play(-1, 0.0)
->>>>>>> origin/master
         return
 
     def handle_state(self):
