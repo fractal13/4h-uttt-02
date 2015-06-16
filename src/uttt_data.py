@@ -2,8 +2,8 @@ import uttt_messages
 import re
 
 PLAYER_N = "N"
-PLAYER_X = pygame.image.load("starfishicon.png")
-PLAYER_O = pygame.image.load("pearl_dribbble.png")
+PLAYER_X = "X"
+PLAYER_O = "O"
 PLAYER_TIE = "TIE"
 LEGAL_BOARD_OWNERS = (PLAYER_X, PLAYER_O, PLAYER_TIE)
 LEGAL_MARKERS = (PLAYER_X, PLAYER_O)

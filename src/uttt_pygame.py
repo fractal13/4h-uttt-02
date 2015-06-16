@@ -115,9 +115,9 @@ class UTTTGame(PygameGame):
                 y = int((row + .5) * self.height / 9)
                 marker = self.data.GetMarker(board, position)
                 if marker == uttt_data.PLAYER_X:
-                    pygame.draw.circle(surface, (0,0,255), (x, y), 5)
+                    pygame.image.load("pearl_dribbble.png")
                 elif marker == uttt_data.PLAYER_O:
-                    pygame.draw.circle(surface, (255,0,0), (x, y), 5)
+                    pygame.image.load("starfishicon.png")
         #Text
         pName = self.data.GetPlayerName()
         self.drawTextLeft(surface, pName, (0, 0, 255), 10, 30, self.font)
