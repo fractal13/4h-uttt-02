@@ -14,6 +14,7 @@ class UTTTGame(PygameGame):
         self.data = data
         self.send_queue = send_queue
         self.font = pygame.font.SysFont("San Serif",14)
+        self.image = pygame.image.load("dude_surfin.png")
         return
 
     def handle_state(self):
@@ -88,11 +89,9 @@ class UTTTGame(PygameGame):
 
     def paint(self, surface):
         # Background
-        # rect = pygame.Rect(0,0,self.width,self.height)
+        rect = pygame.Rect(0,0,self.width,self.height)
         # surface.fill((200,255,0),rect )
-        background_file_name = "dude_surfin.png"
-        background_surface = pygame.image.load(background_file_name)
-        screen.blit(background_surface, (0,0))
+        screen.blit(self.image, (0,0))
 
         
         # Regular Lines
