@@ -2,6 +2,8 @@ from uttt_data import *
 from pygame_game import PygameGame
 import pygame, pygame.locals
 import uttt_data
+from pygame import *
+import pygame, sys
 
 class UTTTGame(PygameGame):
 
@@ -11,7 +13,7 @@ class UTTTGame(PygameGame):
         pygame.font.init()
         self.data = data
         self.send_queue = send_queue
-        self.font = pygame.font.SysFont("OCR A Extended",14)
+        self.font = pygame.font.SysFont("San Serif",14)
         return
 
     def handle_state(self):
@@ -86,8 +88,12 @@ class UTTTGame(PygameGame):
 
     def paint(self, surface):
         # Background
-        rect = pygame.Rect(0,0,self.width,self.height)
-        surface.fill((200,255,0),rect )
+        # rect = pygame.Rect(0,0,self.width,self.height)
+        # surface.fill((200,255,0),rect )
+        background_file_name = "dude_surfin.png"
+        background_surface = pygame.image.load(background_file_name)
+        screen.blit(background_surface, (0,0))
+
         
         # Regular Lines
         for i in range(1,9):
@@ -125,7 +131,7 @@ class UTTTGame(PygameGame):
             else:
                 cPlayer = ("Their turn")
         else:
-            cPlayer = ("Waiting for opponent...")
+            cPlayer = ("Patience is a Virtue, It's your opponents turn...")
         self.drawTextLeft(surface, cPlayer, (255, 0, 0), 10, 90, self.font)
         #Board
         if self.data.GetState() == 8:
