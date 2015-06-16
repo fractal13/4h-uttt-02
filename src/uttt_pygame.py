@@ -91,7 +91,7 @@ class UTTTGame(PygameGame):
         # Background
         rect = pygame.Rect(0,0,self.width,self.height)
         # surface.fill((200,255,0),rect )
-        screen.blit(self.image, (0,0))
+        surface.blit(self.image, (0,0))
 
         
         # Regular Lines
