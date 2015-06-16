@@ -8,8 +8,10 @@ class UTTTGame(PygameGame):
     def __init__(self, width_px, height_px, frames_per_second, data, send_queue):
         # PygameGame sets self.width and self.height        
         PygameGame.__init__(self, "Ultimate Tic Tac Toe", width_px, height_px, frames_per_second)
+        pygame.font.init()
         self.data = data
         self.send_queue = send_queue
+        self.font = pygame.font.SysFont("OCR A Extended",14)
         return
 
     def handle_state(self):
@@ -85,7 +87,7 @@ class UTTTGame(PygameGame):
     def paint(self, surface):
         # Background
         rect = pygame.Rect(0,0,self.width,self.height)
-        surface.fill((0,0,0),rect )
+        surface.fill((200,255,0),rect )
         
         # Regular Lines
         for i in range(1,9):
@@ -95,9 +97,9 @@ class UTTTGame(PygameGame):
 
         # Board Lines
         for k in range(1,3):
-            pygame.draw.line(surface, (255,255,0), (0, k*self.height/3), (self.width, k*self.height/3), 3)
+            pygame.draw.line(surface, (0,0,0), (0, k*self.height/3), (self.width, k*self.height/3), 3)
         for l in range(1,3):
-            pygame.draw.line(surface, (255,255,0), (l*self.width/3, 0), (l*self.height/3, self.height), 3)
+            pygame.draw.line(surface, (0,0,0), (l*self.width/3, 0), (l*self.height/3, self.height), 3)
 
         # Markers
         for board in range(9):
@@ -111,6 +113,32 @@ class UTTTGame(PygameGame):
                     pygame.draw.circle(surface, (0,0,255), (x, y), 5)
                 elif marker == uttt_data.PLAYER_O:
                     pygame.draw.circle(surface, (255,0,0), (x, y), 5)
+        #Text
+        pName = self.data.GetPlayerName()
+        self.drawTextLeft(surface, pName, (0, 0, 255), 260, 30, self.font)
+        oName = self.data.GetOpponentName()
+        self.drawTextLeft(surface, oName, (255, 0, 0), 260, 50, self.font)
+        cPlayer = self.data.GetNextPlayer()
+        if self.data.GetState() == 8:
+            if cPlayer == self.data.GetPlayer():
+                cPlayer = ("Your turn")
+            else:
+                cPlayer = ("Their turn")
+        else:
+            cPlayer = ("Waiting for opponent...")
+        self.drawTextLeft(surface, cPlayer, (255, 0, 0), 260, 90, self.font)
+        #Board
+        if self.data.GetState() == 8:
+            nBoard = self.data.GetNextBoard()
+            nBoard = "Board #" + str(nBoard)
+            self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 260, 70, self.font)
+        return
+    
+    def drawTextLeft(self, surface, text, color, x, y, font):
+        textobj = font.render(text, False, color)
+        textrect = textobj.get_rect()
+        textrect.bottomleft = (x, y)
+        surface.blit(textobj, textrect)
         return
 
 def uttt_pygame_main(data, send_queue):
