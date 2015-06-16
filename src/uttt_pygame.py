@@ -82,11 +82,13 @@ class UTTTGame(PygameGame):
             row = mY / (self.height/9)
             board = 3 * (row / 3) + (col / 3)
             position = 3 * (row % 3) + (col % 3)
+
+            if board == self.data.GetNextBoard() or self.data.GetNextBoard() == -1:
             
-            if self.data and self.send_queue:
-                text = self.data.SendTurn(board, position)
-                print "pygame: queuing: %s" % (text, )
-                self.send_queue.put(text)
+                if self.data and self.send_queue:
+                    text = self.data.SendTurn(board, position)
+                    print "pygame: queuing: %s" % (text, )
+                    self.send_queue.put(text)
         return
 
     def paint(self, surface):
