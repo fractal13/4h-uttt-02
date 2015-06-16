@@ -136,9 +136,9 @@ class UTTTGame(PygameGame):
                     surface.blit(self.player2, (x-25,y-25))
         #Text
         pName = self.data.GetPlayerName()
-        self.drawTextLeft(surface, pName, (0, 0, 255), 10, 30, self.font)
+        self.drawTextLeft(surface, pName, (0, 0, 100), 10, 30, self.font)
         oName = self.data.GetOpponentName()
-        self.drawTextLeft(surface, oName, (255, 0, 0), 10, 50, self.font)
+        self.drawTextLeft(surface, oName, (100, 0, 0), 10, 50, self.font)
         cPlayer = self.data.GetNextPlayer()
         if self.data.GetState() == 8:
             if cPlayer == self.data.GetPlayer():
@@ -147,7 +147,7 @@ class UTTTGame(PygameGame):
                 cPlayer = ("Their turn")
         else:
             cPlayer = ("Patience is a Virtue, It's your opponents turn...")
-        self.drawTextLeft(surface, cPlayer, (255, 0, 0), 10, 90, self.font)
+        self.drawTextLeft(surface, cPlayer, (0, 0, 0), 10, 70, self.font)
         #Board
 ##        if self.data.GetState() == 8:
 ##            nBoard = self.data.GetNextBoard()
