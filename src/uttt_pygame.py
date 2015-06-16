@@ -13,7 +13,7 @@ class UTTTGame(PygameGame):
         pygame.font.init()
         self.data = data
         self.send_queue = send_queue
-        self.font = pygame.font.SysFont("San Serif",14)
+        self.font = pygame.font.SysFont("leelawadee",14)
         self.image = pygame.image.load("dude_surfin.png")
         self.player1 = pygame.image.load("pearl_dribbble.png")
         self.player2 = pygame.image.load("starfishicon.png")
