@@ -106,7 +106,7 @@ class UTTTGame(PygameGame):
         if self.data.GetNextBoard() != -1:
             x = (self.data.GetNextBoard() % 3) * (self.width/3)
             y = (self.data.GetNextBoard() / 3) * (self.height/3)
-            print(x,y)
+            #print(x,y)
             rect = pygame.Rect(x,y,self.width/3,self.height/3)
             self.drawTransparentRect(surface, (255, 255, 255, 100), rect)
         
@@ -151,7 +151,7 @@ class UTTTGame(PygameGame):
         #Board
         if self.data.GetState() == 8:
             nBoard = self.data.GetNextBoard()
-            nBoard = "Board #" + str(nBoard)
+            #nBoard = "Board #" + str(nBoard)
             self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 10, 70, self.font)
 
 
