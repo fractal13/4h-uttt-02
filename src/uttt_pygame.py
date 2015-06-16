@@ -117,9 +117,9 @@ class UTTTGame(PygameGame):
                 y = int((row + .5) * self.height / 9)
                 marker = self.data.GetMarker(board, position)
                 if marker == uttt_data.PLAYER_X:
-                    surface.blit(self.player1, (x-20,y-20))
+                    surface.blit(self.player1, (x-25,y-25))
                 elif marker == uttt_data.PLAYER_O:
-                    surface.blit(self.player2, (x-20,y-20))
+                    surface.blit(self.player2, (x-25,y-25))
         #Text
         pName = self.data.GetPlayerName()
         self.drawTextLeft(surface, pName, (0, 0, 255), 10, 30, self.font)
