@@ -149,10 +149,10 @@ class UTTTGame(PygameGame):
             cPlayer = ("Patience is a Virtue, It's your opponents turn...")
         self.drawTextLeft(surface, cPlayer, (255, 0, 0), 10, 90, self.font)
         #Board
-        if self.data.GetState() == 8:
-            nBoard = self.data.GetNextBoard()
-            #nBoard = "Board #" + str(nBoard)
-            self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 10, 70, self.font)
+##        if self.data.GetState() == 8:
+##            nBoard = self.data.GetNextBoard()
+##            #nBoard = "Board #" + str(nBoard)
+##            self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 10, 70, self.font)
 
 
         return
