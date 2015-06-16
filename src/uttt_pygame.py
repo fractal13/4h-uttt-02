@@ -17,8 +17,6 @@ class UTTTGame(PygameGame):
         self.image = pygame.image.load("dude_surfin.png")
         self.player1 = pygame.image.load("pearl_dribbble.png")
         self.player2 = pygame.image.load("starfishicon.png")
-        self.music = pygame.mixer.music.load("Wallpaper.mp3")
-        pygame.mixer.music.play(self.music)
         return
 
     def handle_state(self):
@@ -96,9 +94,17 @@ class UTTTGame(PygameGame):
     def paint(self, surface):
         # Background
         rect = pygame.Rect(0,0,self.width,self.height)
-        # surface.fill((200,255,0),rect )
+        # surface.fill((200,255,0, 0.5),rect )
         surface.blit(self.image, (0,0))
 
+        
+        #Board Marker
+        if self.data.GetNextBoard() != -1:
+            x = (self.data.GetNextBoard() % 3) * (self.width/3)
+            y = (self.data.GetNextBoard() / 3) * (self.height/3)
+            print(x,y)
+            rect = pygame.Rect(x,y,self.width/3,self.height/3)
+            self.drawTransparentRect(surface, (255, 255, 255, 100), rect)
         
         # Regular Lines
         for i in range(1,9):
@@ -143,15 +149,24 @@ class UTTTGame(PygameGame):
             nBoard = self.data.GetNextBoard()
             nBoard = "Board #" + str(nBoard)
             self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 10, 70, self.font)
+
+
         return
-    
+        
     def drawTextLeft(self, surface, text, color, x, y, font):
         textobj = font.render(text, False, color)
         textrect = textobj.get_rect()
         textrect.bottomleft = (x, y)
         surface.blit(textobj, textrect)
         return
-
+    def drawTransparentRect(self, surface, color, rect):
+        rect_surface = pygame.Surface( (rect.width, rect.height), pygame.locals.SRCALPHA )
+        rect_surface.fill( (0,0,0,0) )
+        r = pygame.Rect(0, 0, rect.width, rect.height)
+        pygame.draw.rect(rect_surface, color, r)
+        surface.blit(rect_surface, (rect.left, rect.top))
+        return
+    
 def uttt_pygame_main(data, send_queue):
     game = UTTTGame(600, 600, 30, data, send_queue)
     game.main_loop()
