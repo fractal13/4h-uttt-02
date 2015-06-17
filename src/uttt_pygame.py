@@ -4,6 +4,7 @@ import pygame, pygame.locals
 import uttt_data
 from pygame import *
 import pygame, sys
+import time
 
 class UTTTGame(PygameGame):
 
@@ -73,6 +74,7 @@ class UTTTGame(PygameGame):
                             uttt_data.STATE_ERROR ]:
                 # close
                 print "Socket closed, or other error, pygame will quit."
+                time.sleep(2)
                 self.gameOver = True
             elif state in [ uttt_data.STATE_SOCKET_OPEN ]:
                 # what should I do?
@@ -97,11 +99,12 @@ class UTTTGame(PygameGame):
             position = 3 * (row % 3) + (col % 3)
 
             if board == self.data.GetNextBoard() or self.data.GetNextBoard() == -1:
+                if self.data.GetBoardOwner(board) == "N":
             
-                if self.data and self.send_queue:
-                    text = self.data.SendTurn(board, position)
-                    print "pygame: queuing: %s" % (text, )
-                    self.send_queue.put(text)
+                    if self.data and self.send_queue:
+                        text = self.data.SendTurn(board, position)
+                        print "pygame: queuing: %s" % (text, )
+                        self.send_queue.put(text)
                     
         if pygame.K_i in newkeys:
             
@@ -126,6 +129,20 @@ class UTTTGame(PygameGame):
                 #print(x,y)
                 rect = pygame.Rect(x,y,self.width/3,self.height/3)
                 self.drawTransparentRect(surface, (255, 255, 255, 100), rect)
+            #Board Owner Marker
+            for i in range(0,8):
+                if self.data.GetBoardOwner(i) == "X":
+                    x = (i % 3) * (self.width/3)
+                    y = (i / 3) * (self.height/3)
+                    rect = pygame.Rect(x,y,self.width/3,self.height/3)
+                    self.drawTransparentRect(surface, (100, 0, 0, 100), rect)
+
+                elif self.data.GetBoardOwner(i) == "O":
+                    x = (i % 3) * (self.width/3)
+                    y = (i / 3) * (self.height/3)
+                    rect = pygame.Rect(x,y,self.width/3,self.height/3)
+                    self.drawTransparentRect(surface, (0, 0, 100, 100), rect)
+  
 
             
             # Regular Lines
@@ -189,7 +206,7 @@ class UTTTGame(PygameGame):
             if self.data.GetWinner() == self.data.GetPlayer():
                 self.drawTextLeft(surface, self.data.GetPlayerName(), (244, 133, 75), 350, 400, self.gfont)
             else:
-                self.drawTextLeft(surface, self.data.GetOpponentName(), (244, 133, 75), 350, 400, self.gfont)
+                self.drawTextLeft(surface, self.data.GetOpponentName(), (244, 133, 75), 350, 395, self.gfont)
 
 
         return
