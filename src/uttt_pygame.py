@@ -17,6 +17,7 @@ class UTTTGame(PygameGame):
         self.send_queue = send_queue
         self.font = pygame.font.SysFont("leelawadee",14)
         self.image = pygame.image.load("dude_surfin.png")
+        self.gameover = pygame.image.load("gameover.png")
         self.player1 = pygame.image.load("pearl_dribbble.png")
         self.player2 = pygame.image.load("starfishicon.png")
         pygame.mixer.init()
@@ -27,7 +28,7 @@ class UTTTGame(PygameGame):
         self.drawRect = 1
         self.transCount = 0
         self.transIncrement = 25
-        
+        self.gameOver= False
         return
 
     def handle_state(self):
@@ -71,7 +72,7 @@ class UTTTGame(PygameGame):
                             uttt_data.STATE_ERROR ]:
                 # close
                 print "Socket closed, or other error, pygame will quit."
-                pygame.quit()
+                self.gameOver = True
             elif state in [ uttt_data.STATE_SOCKET_OPEN ]:
                 # what should I do?
                 pass
@@ -110,74 +111,80 @@ class UTTTGame(PygameGame):
         return
 
     def paint(self, surface):
-        # Background
-        rect = pygame.Rect(0,0,self.width,self.height)
-        # surface.fill((200,255,0, 0.5),rect )
-        surface.blit(self.image, (0,0))
+        if self.gameOver == False:
+            # Background
+            rect = pygame.Rect(0,0,self.width,self.height)
+            # surface.fill((200,255,0, 0.5),rect )
+            surface.blit(self.image, (0,0))
 
-        
-        #Board Marker
-        if self.data.GetNextBoard() != -1 and self.data.GetNextPlayer() == self.data.GetPlayer():
-            x = (self.data.GetNextBoard() % 3) * (self.width/3)
-            y = (self.data.GetNextBoard() / 3) * (self.height/3)
-            #print(x,y)
-            rect = pygame.Rect(x,y,self.width/3,self.height/3)
-            self.drawTransparentRect(surface, (255, 255, 255, 100), rect)
+            
+            #Board Marker
+            if self.data.GetNextBoard() != -1 and self.data.GetNextPlayer() == self.data.GetPlayer():
+                x = (self.data.GetNextBoard() % 3) * (self.width/3)
+                y = (self.data.GetNextBoard() / 3) * (self.height/3)
+                #print(x,y)
+                rect = pygame.Rect(x,y,self.width/3,self.height/3)
+                self.drawTransparentRect(surface, (255, 255, 255, 100), rect)
 
-        
-        # Regular Lines
-        for i in range(1,9):
-            pygame.draw.line(surface, (255,255,255), (0, i*self.height/9), (self.width, i*self.height/9))
-        for j in range(1,9):
-            pygame.draw.line(surface, (255,255,255), (j*self.width/9, 0), (j*self.height/9, self.height))
+            
+            # Regular Lines
+            for i in range(1,9):
+                pygame.draw.line(surface, (255,255,255), (0, i*self.height/9), (self.width, i*self.height/9))
+            for j in range(1,9):
+                pygame.draw.line(surface, (255,255,255), (j*self.width/9, 0), (j*self.height/9, self.height))
 
-        # Board Lines
-        for k in range(1,3):
-            pygame.draw.line(surface, (0,0,0), (0, k*self.height/3), (self.width, k*self.height/3), 3)
-        for l in range(1,3):
-            pygame.draw.line(surface, (0,0,0), (l*self.width/3, 0), (l*self.height/3, self.height), 3)
+            # Board Lines
+            for k in range(1,3):
+                pygame.draw.line(surface, (0,0,0), (0, k*self.height/3), (self.width, k*self.height/3), 3)
+            for l in range(1,3):
+                pygame.draw.line(surface, (0,0,0), (l*self.width/3, 0), (l*self.height/3, self.height), 3)
 
-        # Markers
-        for board in range(9):
-            for position in range(9):
-                col = 3 * (board % 3) + position % 3
-                row = 3 * (board / 3) + position / 3
-                x = int((col + .5) * self.width / 9)
-                y = int((row + .5) * self.height / 9)
-                marker = self.data.GetMarker(board, position)
-                if marker == uttt_data.PLAYER_X:
-                    surface.blit(self.player1, (x-25,y-25))
-                elif marker == uttt_data.PLAYER_O:
-                    surface.blit(self.player2, (x-25,y-25))
-        #This needs to happen when I hit 'i':
-        if self.drawRect == 1:
-            #Text Rect
-            rect = pygame.Rect(0, 533, 200, 66)
-            self.drawTransparentRect(surface, (255, 255, 255, self.transCount), rect)
-            if self.transCount < 200:
-                self.transCount += self.transIncrement
-        else:
-            rect = pygame.Rect(0, 533, 200, 66)
-            self.drawTransparentRect(surface, (255, 255, 255, self.transCount), rect)
-            if self.transCount > 0:
-                self.transCount -= self.transIncrement
-                if self.transCount < 0:
-                    self.transCount = 0
-        if self.transCount > 0:
-            #Text
-            pName = self.data.GetPlayerName()
-            self.drawTextLeft(surface, pName, (0, 0, 100), 0, 550, self.font)
-            oName = self.data.GetOpponentName()
-            self.drawTextLeft(surface, oName, (100, 0, 0), 0, 570, self.font)
-            cPlayer = self.data.GetNextPlayer()
-            if self.data.GetState() == 8:
-                if cPlayer == self.data.GetPlayer():
-                    cPlayer = ("Your turn")
-                else:
-                    cPlayer = ("Their turn")
+            # Markers
+            for board in range(9):
+                for position in range(9):
+                    col = 3 * (board % 3) + position % 3
+                    row = 3 * (board / 3) + position / 3
+                    x = int((col + .5) * self.width / 9)
+                    y = int((row + .5) * self.height / 9)
+                    marker = self.data.GetMarker(board, position)
+                    if marker == uttt_data.PLAYER_X:
+                        surface.blit(self.player1, (x-25,y-25))
+                    elif marker == uttt_data.PLAYER_O:
+                        surface.blit(self.player2, (x-25,y-25))
+            #This needs to happen when I hit 'i':
+            if self.drawRect == 1:
+                #Text Rect
+                rect = pygame.Rect(0, 533, 200, 66)
+                self.drawTransparentRect(surface, (255, 255, 255, self.transCount), rect)
+                if self.transCount < 100:
+                    self.transCount += self.transIncrement
             else:
-                cPlayer = ("Patience is a virtue, please wait for an opponent...")
-            self.drawTextLeft(surface, cPlayer, (0, 0, 0), 0, 590, self.font)
+                rect = pygame.Rect(0, 533, 200, 66)
+                self.drawTransparentRect(surface, (255, 255, 255, self.transCount), rect)
+                if self.transCount > 0:
+                    self.transCount -= self.transIncrement
+                    if self.transCount < 0:
+                        self.transCount = 0
+            if self.transCount > 0:
+                #Text
+                pName = self.data.GetPlayerName()
+                self.drawTextLeft(surface, pName, (0, 0, 100), 5, 555, self.font)
+                oName = self.data.GetOpponentName()
+                self.drawTextLeft(surface, oName, (100, 0, 0), 5, 570, self.font)
+                cPlayer = self.data.GetNextPlayer()
+                if self.data.GetState() == 8:
+                    if cPlayer == self.data.GetPlayer():
+                        cPlayer = ("Your turn")
+                    else:
+                        cPlayer = ("Their turn")
+                else:
+                    cPlayer = ("Waiting for opponent...")
+                self.drawTextLeft(surface, cPlayer, (0, 0, 0), 5, 585, self.font)
+                self.drawTextLeft(surface, "i to toggle stats", (0, 0, 0), 5, 600, self.font)
+        else:
+            # Game Over Screen
+            rect = pygame.Rect(0,0,self.width,self.height)
+            surface.blit(self.gameover, (0,0))
 
 
         return
