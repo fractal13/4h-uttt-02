@@ -55,7 +55,7 @@ class TTTGUI:
 
         login_button_style = self.login_button.get_style().copy()
         login_button_style.bg[gtk.STATE_NORMAL] = self.login_button.get_colormap().alloc(65535, 32767, 0)
-        login_button_style.bg[gtk.STATE_PRELIGHT] = self.login_button.get_colormap().alloc(0, 0, 65535)
+        login_button_style.bg[gtk.STATE_PRELIGHT] = self.login_button.get_colormap().alloc(25088, 49408, 54272)
         self.login_button.set_style(login_button_style)
         
         # Login Interface

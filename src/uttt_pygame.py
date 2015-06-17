@@ -7,6 +7,8 @@ import pygame, sys
 
 class UTTTGame(PygameGame):
 
+
+
     def __init__(self, width_px, height_px, frames_per_second, data, send_queue):
         # PygameGame sets self.width and self.height        
         PygameGame.__init__(self, "Ultimate Tic Tac Toe", width_px, height_px, frames_per_second)
@@ -21,6 +23,9 @@ class UTTTGame(PygameGame):
         self.music = pygame.mixer.music.load("Wallpaper.mp3")
 
         pygame.mixer.music.play(-1, 0.0)
+
+        self.drawRect = 1
+        
         return
 
     def handle_state(self):
@@ -93,6 +98,13 @@ class UTTTGame(PygameGame):
                     text = self.data.SendTurn(board, position)
                     print "pygame: queuing: %s" % (text, )
                     self.send_queue.put(text)
+                    
+        if pygame.K_i in newkeys:
+            
+            print("detected")
+            self.drawRect *= -1
+            
+            
         return
 
     def paint(self, surface):
@@ -103,12 +115,13 @@ class UTTTGame(PygameGame):
 
         
         #Board Marker
-        if self.data.GetNextBoard() != -1:
+        if self.data.GetNextBoard() != -1 and self.data.GetNextPlayer() == self.data.GetPlayer():
             x = (self.data.GetNextBoard() % 3) * (self.width/3)
             y = (self.data.GetNextBoard() / 3) * (self.height/3)
             #print(x,y)
             rect = pygame.Rect(x,y,self.width/3,self.height/3)
             self.drawTransparentRect(surface, (255, 255, 255, 100), rect)
+
         
         # Regular Lines
         for i in range(1,9):
@@ -134,25 +147,26 @@ class UTTTGame(PygameGame):
                     surface.blit(self.player1, (x-25,y-25))
                 elif marker == uttt_data.PLAYER_O:
                     surface.blit(self.player2, (x-25,y-25))
-        #Text
-        pName = self.data.GetPlayerName()
-        self.drawTextLeft(surface, pName, (0, 0, 100), 10, 30, self.font)
-        oName = self.data.GetOpponentName()
-        self.drawTextLeft(surface, oName, (100, 0, 0), 10, 50, self.font)
-        cPlayer = self.data.GetNextPlayer()
-        if self.data.GetState() == 8:
-            if cPlayer == self.data.GetPlayer():
-                cPlayer = ("Your turn")
+        #This needs to happen when I hit 'i':
+        if self.drawRect == 1:
+            #Text Rect
+            rect = pygame.Rect(0, 533, 200, 66)
+            self.drawTransparentRect(surface, (255, 255, 255, 175), rect)
+            
+            #Text
+            pName = self.data.GetPlayerName()
+            self.drawTextLeft(surface, pName, (0, 0, 100), 0, 550, self.font)
+            oName = self.data.GetOpponentName()
+            self.drawTextLeft(surface, oName, (100, 0, 0), 0, 570, self.font)
+            cPlayer = self.data.GetNextPlayer()
+            if self.data.GetState() == 8:
+                if cPlayer == self.data.GetPlayer():
+                    cPlayer = ("Your turn")
+                else:
+                    cPlayer = ("Their turn")
             else:
-                cPlayer = ("Their turn")
-        else:
-            cPlayer = ("Patience is a Virtue, It's your opponents turn...")
-        self.drawTextLeft(surface, cPlayer, (0, 0, 0), 10, 70, self.font)
-        #Board
-##        if self.data.GetState() == 8:
-##            nBoard = self.data.GetNextBoard()
-##            #nBoard = "Board #" + str(nBoard)
-##            self.drawTextLeft(surface, str(nBoard), (0, 0, 0), 10, 70, self.font)
+                cPlayer = ("Patience is a virtue, please wait for an opponent...")
+            self.drawTextLeft(surface, cPlayer, (0, 0, 0), 0, 590, self.font)
 
 
         return
@@ -170,6 +184,7 @@ class UTTTGame(PygameGame):
         pygame.draw.rect(rect_surface, color, r)
         surface.blit(rect_surface, (rect.left, rect.top))
         return
+
     
 def uttt_pygame_main(data, send_queue):
     game = UTTTGame(600, 600, 30, data, send_queue)
