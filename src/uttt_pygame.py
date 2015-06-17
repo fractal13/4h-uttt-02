@@ -25,6 +25,8 @@ class UTTTGame(PygameGame):
         pygame.mixer.music.play(-1, 0.0)
 
         self.drawRect = 1
+        self.transCount = 0
+        self.transIncrement = 25
         
         return
 
@@ -103,7 +105,7 @@ class UTTTGame(PygameGame):
             
             print("detected")
             self.drawRect *= -1
-            
+            #self.transCount = 0
             
         return
 
@@ -151,8 +153,17 @@ class UTTTGame(PygameGame):
         if self.drawRect == 1:
             #Text Rect
             rect = pygame.Rect(0, 533, 200, 66)
-            self.drawTransparentRect(surface, (255, 255, 255, 175), rect)
-            
+            self.drawTransparentRect(surface, (255, 255, 255, self.transCount), rect)
+            if self.transCount < 200:
+                self.transCount += self.transIncrement
+        else:
+            rect = pygame.Rect(0, 533, 200, 66)
+            self.drawTransparentRect(surface, (255, 255, 255, self.transCount), rect)
+            if self.transCount > 0:
+                self.transCount -= self.transIncrement
+                if self.transCount < 0:
+                    self.transCount = 0
+        if self.transCount > 0:
             #Text
             pName = self.data.GetPlayerName()
             self.drawTextLeft(surface, pName, (0, 0, 100), 0, 550, self.font)
