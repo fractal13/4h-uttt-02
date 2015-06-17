@@ -16,6 +16,7 @@ class UTTTGame(PygameGame):
         self.data = data
         self.send_queue = send_queue
         self.font = pygame.font.SysFont("leelawadee",14)
+        self.gfont = pygame.font.SysFont("Lithos Pro", 25)
         self.image = pygame.image.load("dude_surfin.png")
         self.gameover = pygame.image.load("gameover.png")
         self.player1 = pygame.image.load("pearl_dribbble.png")
@@ -185,6 +186,7 @@ class UTTTGame(PygameGame):
             # Game Over Screen
             rect = pygame.Rect(0,0,self.width,self.height)
             surface.blit(self.gameover, (0,0))
+            self.drawTextLeft(surface, self.data.GetWinner, (244, 133, 75), 500, 400, self.gfont)
 
 
         return
