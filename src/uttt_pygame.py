@@ -18,7 +18,7 @@ class UTTTGame(PygameGame):
         self.font = pygame.font.SysFont("leelawadee",14)
         self.gfont = pygame.font.SysFont("Lithos Pro", 25)
         self.image = pygame.image.load("dude_surfin.png")
-        self.gameover = pygame.image.load("gameover.png")
+        self.gameover = pygame.image.load("beach-over.png")
         self.player1 = pygame.image.load("pearl_dribbble.png")
         self.player2 = pygame.image.load("starfishicon.png")
         pygame.mixer.init()
@@ -186,7 +186,10 @@ class UTTTGame(PygameGame):
             # Game Over Screen
             rect = pygame.Rect(0,0,self.width,self.height)
             surface.blit(self.gameover, (0,0))
-            self.drawTextLeft(surface, self.data.GetWinner, (244, 133, 75), 500, 400, self.gfont)
+            if self.data.GetWinner() == self.data.GetPlayer():
+                self.drawTextLeft(surface, self.data.GetPlayerName(), (244, 133, 75), 350, 400, self.gfont)
+            else:
+                self.drawTextLeft(surface, self.data.GetOpponentName(), (244, 133, 75), 350, 400, self.gfont)
 
 
         return
